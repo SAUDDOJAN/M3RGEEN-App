@@ -1,0 +1,80 @@
+{
+  "name": "m3rgeen-aion2",
+  "version": "0.1.0-beta",
+  "description": "M3RGEEN Aion 2 Arab Community Companion Desktop App",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --mock",
+    "start:mock": "electron . --mock",
+    "build": "electron-builder --win",
+    "pack": "electron-builder --dir"
+  },
+  "author": "M3RGEEN",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.m3rgeen.aion2",
+    "productName": "M3RGEEN Aion 2",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "SAUDDOJAN",
+        "repo": "M3RGEEN-App"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "desktop/**/*",
+      "assets/**/*",
+      "index.html",
+      "styles.css",
+      "app.js",
+      "auth-client.js",
+      "event-timers.js",
+      "roadmap.js",
+      "roadmap-data.js",
+      "!preview.cjs",
+      "!verify.cjs",
+      "!FINAL_PRE_PACKAGING_AUDIT.md",
+      "!AUTH-SETUP.md",
+      "!README.md",
+      "!about-latest.png",
+      "!dungeon-icons-review.jpg"
+    ],
+    "icon": "assets/icon.ico",
+    "afterPack": "./desktop/afterPack.cjs",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "M3RGEEN Aion 2",
+      "uninstallDisplayName": "M3RGEEN Aion 2",
+      "deleteAppDataOnUninstall": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "installerSidebar": "assets/installer-sidebar.bmp",
+      "uninstallerSidebar": "assets/uninstaller-sidebar.bmp",
+      "include": "desktop/installer.nsh"
+    }
+  }
+}
