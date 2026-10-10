@@ -520,6 +520,51 @@
           b.disabled = false;
           b.textContent = originalText;
         }
+      } else if (a === 'sync-profile') {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        if (b.disabled) return;
+        b.disabled = true;
+        const originalText = b.innerHTML;
+        b.innerHTML = '⏳ جاري المزامنة مع الشوقو...';
+
+        try {
+          const res = await request('/api/auth/aion2-profile/sync', {});
+          if (res && res.success) {
+            if (res.lastSyncAt) {
+              window.lastProfileSyncAt = res.lastSyncAt;
+            }
+            if (res.user) {
+              account(res.user);
+            }
+            if (typeof syncRoadmapWithUser === 'function') {
+              syncRoadmapWithUser();
+            }
+            if (typeof renderRoadmap === 'function' && (typeof page !== 'undefined' ? page === 'roadmap' : window.page === 'roadmap')) {
+              renderRoadmap();
+            }
+            if (typeof renderAccess === 'function' && (typeof page !== 'undefined' ? page === 'access' : window.page === 'access')) {
+              renderAccess();
+            }
+            if (typeof toast === 'function') {
+              toast('✅ ' + (res.message || 'تمت مزامنة بيانات الشخصية بنجاح.'));
+            }
+          } else {
+            const msg = res?.message || res?.error || 'تعذر المزامنة حالياً.';
+            if (typeof toast === 'function') {
+              toast(msg.startsWith('❌') || msg.startsWith('⏳') ? msg : '❌ ' + msg);
+            }
+          }
+        } catch (err) {
+          const errMsg = err.detailMessage || err.data?.message || err.message || 'تعذر الاتصال بالخادم للمزامنة.';
+          if (typeof toast === 'function') {
+            toast(errMsg.startsWith('❌') || errMsg.startsWith('⏳') ? errMsg : '❌ ' + errMsg);
+          }
+        } finally {
+          b.disabled = false;
+          b.innerHTML = originalText;
+        }
       } else if (a === 'confirm-leave') {
         e.stopPropagation();
         e.preventDefault();
