@@ -1,6 +1,6 @@
 {
   "name": "m3rgeen-aion2",
-  "version": "0.1.1-beta",
+  "version": "0.1.2-beta",
   "description": "M3RGEEN Aion 2 Arab Community Companion Desktop App",
   "main": "desktop/main.cjs",
   "scripts": {

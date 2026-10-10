@@ -1576,6 +1576,45 @@
     }
   });
 
+  // Desktop Application Version Dynamic Sync
+  async function syncAppVersionFromDesktop() {
+    let rawVersion = null;
+    if (window.electronAPI && typeof window.electronAPI.getAppVersion === 'function') {
+      try {
+        rawVersion = await window.electronAPI.getAppVersion();
+      } catch (err) {
+        console.warn('[Version] Error querying Electron app version:', err);
+      }
+    }
+    if (!rawVersion && typeof window !== 'undefined' && window.__M3RGEEN_VERSION__) {
+      rawVersion = window.__M3RGEEN_VERSION__;
+    }
+    if (!rawVersion) {
+      rawVersion = '0.1.2-beta';
+    }
+
+    window.__APP_VERSION__ = rawVersion;
+    const isBeta = rawVersion.toLowerCase().includes('beta');
+    const cleanNum = rawVersion.replace(/-?beta.*$/i, '').replace(/^v/, '');
+    const badgeText = isBeta ? `Beta v${cleanNum}` : `v${cleanNum}`;
+    window.__APP_VERSION_DISPLAY__ = badgeText;
+
+    const topBadge = document.getElementById('app-version-badge');
+    if (topBadge) {
+      topBadge.textContent = badgeText;
+      topBadge.title = `الإصدار الحالي: v${rawVersion.replace(/^v/, '')}`;
+    }
+    const authNote = document.getElementById('auth-version-note');
+    if (authNote) {
+      authNote.textContent = `إصدار ${badgeText} • مجتمع M3RGEEN الرسمي`;
+    }
+    const aboutBadge = document.getElementById('about-version-badge');
+    if (aboutBadge) {
+      aboutBadge.textContent = badgeText;
+    }
+  }
+  syncAppVersionFromDesktop();
+
   // Auto-Updater Remote Events & Actions
   if (window.electronAPI && typeof window.electronAPI.onUpdaterEvent === 'function') {
     const banner = document.getElementById('update-banner');
